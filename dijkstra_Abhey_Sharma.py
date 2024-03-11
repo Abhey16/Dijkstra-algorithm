@@ -8,17 +8,17 @@ import matplotlib.pyplot as plt
 def obstacle_map(canvas):
 
     #Creating rectangle 1
-    cv2.rectangle(canvas,pt1=(100,0),pt2=(175,400),color=(255,0,0),thickness=-1)
+    cv2.rectangle(canvas,pt1=(100,0),pt2=(175,400),color=(130,0,75),thickness=-1)
 
     #Creating rectangle 2
-    cv2.rectangle(canvas,pt1=(275,100),pt2=(350,500),color=(255,0,0),thickness=-1)
+    cv2.rectangle(canvas,pt1=(275,100),pt2=(350,500),color=(130,0,75),thickness=-1)
 
     # Draw hexagon
-    cv2.fillPoly(canvas, [np.array([(650, 400), (775, 325), (775, 175), (650, 100), (525, 175), (525, 325)])], color=(255, 0, 0))
+    cv2.fillPoly(canvas, [np.array([(650, 400), (775, 325), (775, 175), (650, 100), (525, 175), (525, 325)])], color=(130,0,75))
 
     # Draw polygon
 
-    cv2.fillPoly(canvas, [np.array([(900, 50), (900, 125), (1020, 125), (1020, 375), (900, 375), (900, 450), (1100, 450), (1100, 50)])], color=(255, 0, 0))
+    cv2.fillPoly(canvas, [np.array([(900, 50), (900, 125), (1020, 125), (1020, 375), (900, 375), (900, 450), (1100, 450), (1100, 50)])], color=(130,0,75))
 
     return canvas
 
@@ -132,13 +132,17 @@ def get_path(start_position, goal_position,closed_list):
     
     return path,closed_list
 
-def visualization(path,closed_list,canvas):
+def visualization(path,closed_list,canvas,start_position,goal_position):
     
     #Create video
     # output_video = cv2.VideoWriter('visualization', cv2.VideoWriter_fourcc(*'XVID'), 800, (canvas.shape[1], canvas.shape[0]))
 
+    #Draw start and goal node
+    cv2.circle(canvas,start_position, 5, (0, 255, 0), -1)
+    cv2.circle(canvas,goal_position, 5, (0, 0, 255), -1)
+
     for visited_node in closed_list:
-        canvas[visited_node[1]][visited_node[0]] = [0,255,0]
+        canvas[visited_node[1]][visited_node[0]] = [0,128,139]
 
         cv2.imshow("canvas",canvas)
         # plt.imshow(canvas)
@@ -275,7 +279,7 @@ if __name__=="__main__":
     # print(path)
 
     #Display Node exploration and Optimal path
-    visualization(path,closed_list,canvas)
+    visualization(path,closed_list,canvas,start_position,goal_position)
 
     end_time = time.time()
 
