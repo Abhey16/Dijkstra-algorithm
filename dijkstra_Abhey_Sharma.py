@@ -10,17 +10,17 @@ import copy
 def obstacle_map(canvas):
 
     #Creating rectangle 1
-    cv2.rectangle(canvas,pt1=(100,0),pt2=(175,400),color=(130,0,75),thickness=-1)
+    cv2.rectangle(canvas,pt1=(100,0),pt2=(175,400),color=(179,41,43),thickness=-1)
 
     #Creating rectangle 2
-    cv2.rectangle(canvas,pt1=(275,100),pt2=(350,500),color=(130,0,75),thickness=-1)
+    cv2.rectangle(canvas,pt1=(275,100),pt2=(350,500),color=(179,41,43),thickness=-1)
 
     # Draw hexagon
-    cv2.fillPoly(canvas, [np.array([(650, 400), (775, 325), (775, 175), (650, 100), (525, 175), (525, 325)])], color=(130,0,75))
+    cv2.fillPoly(canvas, [np.array([(650, 400), (775, 325), (775, 175), (650, 100), (525, 175), (525, 325)])], color=(179,41,43))
 
     # Draw polygon
 
-    cv2.fillPoly(canvas, [np.array([(900, 50), (900, 125), (1020, 125), (1020, 375), (900, 375), (900, 450), (1100, 450), (1100, 50)])], color=(130,0,75))
+    cv2.fillPoly(canvas, [np.array([(900, 50), (900, 125), (1020, 125), (1020, 375), (900, 375), (900, 450), (1100, 450), (1100, 50)])], color=(179,41,43))
 
     return canvas
 
@@ -144,7 +144,7 @@ def visualization(path,closed_list,canvas,start_position,goal_position):
     cv2.circle(canvas,goal_position, 5, (0, 0, 255), -1)
 
     for visited_node in closed_list:
-        canvas[visited_node[1]-1][visited_node[0]-1] = [0,128,139]
+        canvas[visited_node[1]-1][visited_node[0]-1] = [57,131,196]
 
         vid = cv2.flip(canvas,0) 
         output_video.write(vid)
@@ -281,8 +281,6 @@ if __name__=="__main__":
 
     # input start and goal node coordinates
     start_position,goal_position = input_coordinates()
-
-    # print(start_position,goal_position)
 
     #dijkstra algorithm
     path,closed_list = dijkstra(start_position, goal_position, canvas)
