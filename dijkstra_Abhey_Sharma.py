@@ -57,30 +57,24 @@ def is_valid(x,y):
     if (0 <= x <= width and 0 <= y <= height):
         pass
     else:
-        # print("Invalid position: out of bounds of canvas")
         return False
 
     #Here (x-5) and (y-5) is used to account for 5 mm clearance
     #check if the coordinates are within bounds of rectangle 1
     if ((100-5) <= x <= (175+5)) and (0 <= y <= (400+5)):
-        # print("Invalid position: Inside rectangle 1")
         return False
        
     #check if the coordinates are within bounds of rectangle 2
     if ((275-5) <= x <= (350+5)) and ((100-5) <= y <= 500):
-        # print("Invalid position: Inside rectangle2")
         return False
 
     #Here (x-3.53) and (y-3.53) is used to account for 5 mm clearance in diagonal dirn
     #check if the coordinates are within bounds of hexagon
-
     if (((y+3.53)+(3/5)*(x+3.53)-490 >=0) and ((y+3.53)-(3/5)*(x-3.53)+290>=0) and (y)<=175) or ((525-5) <= (x) <= (775+5) and (175 <= (y) <= 325)) or (((y-3.53)-(3/5)*(x+3.53)-10<=0) and ((y-3.53)+(3/5)*(x-3.53) - 790 <=0) and (y)>=325):
-        # print("Invalid position: Inside hexagon")
         return False
 
     #check if the coordinates are within bounds of polygon
     if ((900-5) <= (x) <= (1100+5) and (50-5) <= (y) <= (125+5)) or ((1020-5) <= (x) <= (1100+5) and 125 <= (y) <= 375) or ((900-5) <= (x) <= (1100+5) and (375-5) <= (y) <= (450+5)):
-        # print("Invalid position: Inside polygon")
         return False
     
     return True
@@ -108,7 +102,6 @@ def move_node(present_node,move):
 
     if is_valid(new_x, new_y):
         next_node = (new_x, new_y)
-
         return next_node
     
     else:
@@ -143,13 +136,14 @@ def visualization(path,closed_list,canvas,start_position,goal_position):
     cv2.circle(canvas,start_position, 5, (0, 255, 0), -1)
     cv2.circle(canvas,goal_position, 5, (0, 0, 255), -1)
 
+    #Draw visited nodes
     for visited_node in closed_list:
         canvas[visited_node[1]-1][visited_node[0]-1] = [57,131,196]
 
         vid = cv2.flip(canvas,0) 
         output_video.write(vid)
     
-
+    #Draw optimal Path
     optimal_path = copy.deepcopy(path)
     optimal_path.reverse()
     for i in range(len(optimal_path)):
@@ -157,12 +151,12 @@ def visualization(path,closed_list,canvas,start_position,goal_position):
         node = optimal_path.pop()
 
         canvas[node[1]-1][node[0]-1] = [0, 0, 0]       
-        a = cv2.flip(canvas, 0)
+        vid = cv2.flip(canvas, 0)
 
-        output_video.write(a)
+        output_video.write(vid)
         i+=1
 
-    cv2.imwrite('path.png', a)
+    cv2.imwrite('path.png', vid)
     output_video.release() 
 
 #dijkstra algorithm
@@ -269,11 +263,9 @@ if __name__=="__main__":
 
     start_time = time.time() 
 
-    #create obstacle map
     # create blank  canvas
     width = 1200
     height = 500
-    # canvas = np.ones((height,width,3))
     canvas = np.ones((height,width,3), dtype=np.uint8) * 255
 
     # draw the obstacle map
@@ -284,7 +276,6 @@ if __name__=="__main__":
 
     #dijkstra algorithm
     path,closed_list = dijkstra(start_position, goal_position, canvas)
-    # print(path)
 
     #Display Node exploration and Optimal path
     visualization(path,closed_list,canvas,start_position,goal_position)
