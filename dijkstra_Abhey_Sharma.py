@@ -4,6 +4,8 @@ import cv2
 import heapq as hq
 import numpy as np
 import matplotlib.pyplot as plt
+import copy
+
 
 def obstacle_map(canvas):
 
@@ -135,26 +137,33 @@ def get_path(start_position, goal_position,closed_list):
 def visualization(path,closed_list,canvas,start_position,goal_position):
     
     #Create video
-    # output_video = cv2.VideoWriter('visualization', cv2.VideoWriter_fourcc(*'XVID'), 800, (canvas.shape[1], canvas.shape[0]))
+    output_video = cv2.VideoWriter('visualization.avi', cv2.VideoWriter_fourcc(*'XVID'), 800, (canvas.shape[1], canvas.shape[0]))
 
     #Draw start and goal node
     cv2.circle(canvas,start_position, 5, (0, 255, 0), -1)
     cv2.circle(canvas,goal_position, 5, (0, 0, 255), -1)
 
     for visited_node in closed_list:
-        canvas[visited_node[1]][visited_node[0]] = [0,128,139]
+        canvas[visited_node[1]-1][visited_node[0]-1] = [0,128,139]
 
-        cv2.imshow("canvas",canvas)
-        # plt.imshow(canvas)
+        vid = cv2.flip(canvas,0) 
+        output_video.write(vid)
     
 
-        # output_video.write(canvas)
+    optimal_path = copy.deepcopy(path)
+    optimal_path.reverse()
+    for i in range(len(optimal_path)):
 
-        ch = cv2.waitKey(1)
+        node = optimal_path.pop()
 
-        if ch & 0xFF == ord('q'):
-            break 
+        canvas[node[1]-1][node[0]-1] = [0, 0, 0]       
+        a = cv2.flip(canvas, 0)
 
+        output_video.write(a)
+        i+=1
+
+    cv2.imwrite('path.png', a)
+    output_video.release() 
 
 #dijkstra algorithm
 def dijkstra(start_position, goal_position, canvas):
@@ -264,7 +273,8 @@ if __name__=="__main__":
     # create blank  canvas
     width = 1200
     height = 500
-    canvas = np.ones((height,width,3))
+    # canvas = np.ones((height,width,3))
+    canvas = np.ones((height,width,3), dtype=np.uint8) * 255
 
     # draw the obstacle map
     canvas = obstacle_map(canvas)
